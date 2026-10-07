@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#faf6ef" />
+    <title>لا يوجد اتصال | جمرة</title>
+    <style>
+      :root {
+        --cream: #faf6ef;
+        --ink: #1a1512;
+        --muted: #6f655c;
+        --brand: #d93a16;
+        --line: #e8dfd2;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100dvh;
+        display: grid;
+        place-items: center;
+        padding: 24px 16px;
+        background: var(--cream);
+        color: var(--ink);
+        font-family: system-ui, "Segoe UI", Tahoma, sans-serif;
+        line-height: 1.6;
+        text-align: center;
+      }
+      main { max-width: 26rem; }
+      .mark {
+        width: 56px; height: 56px; margin: 0 auto 20px;
+        display: grid; place-items: center;
+        border-radius: 12px; background: var(--brand);
+      }
+      h1 { margin: 0; font-size: 1.5rem; }
+      p { margin: 8px 0 0; color: var(--muted); }
+      button {
+        margin-top: 24px; height: 48px; padding: 0 28px;
+        border: 0; border-radius: 999px;
+        background: var(--brand); color: #fff;
+        font: inherit; font-weight: 700; cursor: pointer;
+      }
+      button:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="mark" aria-hidden="true">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" />
+        </svg>
+      </div>
+      <h1>أنت غير متصل بالإنترنت</h1>
+      <p>لا يمكن فتح هذه الصفحة بدون اتصال. سلتك محفوظة على جهازك، وتقدر تكمل الطلب أول ما يرجع الاتصال.</p>
+      <button type="button" onclick="location.reload()">حاول مرة أخرى</button>
+    </main>
+    <script>
+      window.addEventListener("online", function () { location.reload(); });
+    </script>
+  </body>
+</html>

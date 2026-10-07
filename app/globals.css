@@ -1,26 +1,234 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ------------------------------------------------------------------
+   Design tokens
+   60% cream surfaces · 30% ink (text + dark bands) · 10% ember (CTAs)
+   ------------------------------------------------------------------ */
+@theme {
+  --font-sans: var(--font-text), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display-face), var(--font-text), ui-sans-serif, sans-serif;
+  --font-hand: var(--font-hand-face), var(--font-text), cursive;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-cream: #faf6ef;
+  --color-cream-deep: #f1e9dc;
+  --color-surface: #ffffff;
+  --color-ink: #1a1512;
+  --color-ink-soft: #463e37;
+  --color-ink-muted: #6f655c;
+  --color-line: #e8dfd2;
+  --color-line-strong: #d3c7b6;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --color-brand: #d93a16;
+  --color-brand-hover: #bb3011;
+  --color-brand-tint: #fdebe4;
+  --color-brand-ink: #9b2a0d;
+  /* Ember tint readable on ink backgrounds. */
+  --color-brand-glow: #ff9b85;
+
+  /* Charcoal hero panel: matches the hero photo's backdrop so its edges blend without a seam. */
+  --color-char: #1c1b1a;
+
+  --color-mustard: #ffb627;
+  --color-mustard-tint: #fff1d2;
+
+  --color-success: #15724a;
+  --color-success-tint: #e2f3e9;
+  --color-danger: #b42318;
+  --color-danger-tint: #fdeceb;
+
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 0.875rem;
+  --radius-xl: 1.25rem;
+
+  /* Soft, low-alpha shadows (all < 0.08); raised surfaces also carry a 1px hairline. */
+  --shadow-card: 0 1px 2px rgb(26 21 18 / 0.05), 0 2px 8px -2px rgb(26 21 18 / 0.06);
+  --shadow-raised: 0 2px 4px rgb(26 21 18 / 0.04), 0 16px 32px -12px rgb(26 21 18 / 0.075);
+  --shadow-overlay: 0 24px 64px -16px rgb(26 21 18 / 0.075);
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --container-page: 80rem;
+
+  --animate-shimmer: shimmer 1.4s linear infinite;
+  @keyframes shimmer {
+    from {
+      background-position: 150% 0;
+    }
+    to {
+      background-position: -50% 0;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Header height drives sticky offsets and anchor scroll padding. */
+:root {
+  --header-h: 4rem;
+  --category-bar-h: 3.75rem;
+  --mobile-cart-bar-h: 0px;
+}
+@media (min-width: 64rem) {
+  :root {
+    --header-h: 4.5rem;
+  }
+}
+
+@layer base {
+  html {
+    scroll-padding-top: calc(var(--header-h) + 0.75rem);
+    scrollbar-gutter: stable;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-cream);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    line-height: 1.3;
+    text-wrap: balance;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  button,
+  [role="button"],
+  summary,
+  label[for] {
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+  }
+
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
+
+  /* Overlays lock page scroll while open. */
+  html:has(dialog[open]) {
+    overflow: hidden;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Reusable utilities
+   ------------------------------------------------------------------ */
+@utility container-page {
+  width: 100%;
+  max-width: var(--container-page);
+  margin-inline: auto;
+  padding-inline: 1rem;
+  @media (min-width: 48rem) {
+    padding-inline: 1.5rem;
+  }
+  @media (min-width: 80rem) {
+    padding-inline: 2rem;
+  }
+}
+
+/* Homepage type scale: hero 36→60px, section headings 30→40px. */
+@utility text-hero {
+  font-size: clamp(2.25rem, 1rem + 3.2vw, 3.75rem);
+  line-height: 1.16;
+}
+@utility text-section {
+  font-size: clamp(1.875rem, 1.5rem + 1vw, 2.5rem);
+  line-height: 1.25;
+}
+
+/* Section rhythm. Neighbouring sections add up, so the gap between two
+   sections is 56px phone, 72px tablet, 96px desktop. */
+@utility section-y {
+  padding-block: 1.75rem;
+  @media (min-width: 48rem) {
+    padding-block: 2.25rem;
+  }
+  @media (min-width: 64rem) {
+    padding-block: 3rem;
+  }
+}
+
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+@utility skeleton {
+  background-color: var(--color-cream-deep);
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgb(255 255 255 / 0.55) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  background-repeat: no-repeat;
+  animation: var(--animate-shimmer);
+}
+
+/* ------------------------------------------------------------------
+   Native <dialog> as an unstyled full-viewport host; panels position
+   themselves. GSAP drives enter/exit.
+   ------------------------------------------------------------------ */
+dialog.sheet {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  overflow: hidden;
+}
+dialog.sheet::backdrop {
+  background: transparent;
+}
+
+/* Hero entrance: hide animated parts before hydration only when motion is
+   allowed (class is set by an inline head script). A failsafe class shows
+   everything if JS never runs the timeline. */
+html.motion-ready:not(.motion-failsafe) [data-hero-reveal] {
+  visibility: hidden;
+}
+/* The hero photo is never hidden (it is the LCP element); a curtain covers it instead. */
+html.motion-ready:not(.motion-failsafe) [data-hero-curtain] {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
